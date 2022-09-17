@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <script src="index.js"></script>
+    <title>Postman2Markdown</title>
+</head>
+<body>
+    <div id="snackbar">Markdown copiado al portapapeles, cool!</div>
+    <div class="cabecera">
+        <h2>Subi tu archivo Postman de documentacion(v2.1)</h2>
+        <div class="ladoIzq">
+            <p>El mismo será convertido a formato Markdown y podrás <br> copiarlo en un archivo tipo readme.md para usar en GitHub</p>
+            <div id="fileUploadContainer">
+                <input id="fileUploadInput" type="file" accept=".json" />
+            </div>
+            <br/>
+            <div id="downloadButtonContainer" class="hidden">
+                <button id="generateFile" role="button" onclick="copyDivToClipboard(); confirmacion();" class="button-49">Copiar al portapapeles</button>
+            </div>
+        </div>
+        <div class="ladoDer">
+            <div class="github-card" data-github="Coihue555/postman2markdown" data-width="400" data-height="" data-theme="default"></div>
+            <script src="//cdn.jsdelivr.net/github-cards/latest/widget.js"></script>
+            <h6>Si no tenes un json para probar, <a href="https://coihue555.github.io/postman2markdown/demo/docs.json" download>aca podes descargar uno</a></h6>
+        </div>
+    </div>
+    
+    <p></p>
+    <div id="fileEditorContainer">
+        <hr/>
+        <h2>Resultado:</h2>
+        <div class="preview" id="textInput"></div>
+    </div>
+    <hr/>
+    <p>Tenes un .json que da error? Enviamelo por mail y le pego una revisada <a href="mailto:octarinedevs@gmail.com">OctarineDevs</a></p>
+    <p>Suscribite a mi canal de <a href="https://www.youtube.com/c/OctarineCode">Youtube</a></p>
+    <script>
+
+
+        
+        //Declare all elements
+        const fileInput =   document.getElementById("fileUploadInput");
+        const textInput = document.getElementById("textInput");
+        const generateButton = document.getElementById("generateFile");
+        const downloadButtonContainer = document.getElementById("downloadButtonContainer");
+        // const fileDownload = document.getElementById("fileDownload");
+        
+        //declare all event Listeners
+        fileInput.addEventListener("change", handleUpload);
+        fileInput.addEventListener("change", applyDataUrlToAnchor);
+        
+        function handleUpload (event){
+          //fetch the first file (the element could provide multiple files)
+          var file = event.target.files[0];
+          var reader = new FileReader();
+        
+          //use the textInput variable previously declared to update the text input
+          reader.onload = (e) => {    
+            let myJson = JSON.parse(e.target.result);
+            
+            let cadena = [];
+        let contenido = document.getElementById("textInput");
+        let imgRegex = /!\[]\([^)]*\)/g;
+        let jsonRegex = /```json \{[^}]*\} ```/g;
+        
+        console.log(myJson.item);
+        
+        cadena.push("# "+myJson.info.name+"<br><br>");
+        cadena.push(formatear(myJson.info.description+"<br><br>"));
+        
+        for (let i = 0; i < myJson.item.length; i++) {
+            cadena.push(formatear("## "+myJson.item[i].name+"<br><br>"));
+            if('description' in myJson.item[i] ){
+                cadena.push(formatear(myJson.item[i].description+"<br><br>"));
+            }
+            if('item' in myJson.item[i]){
+                for (let j = 0; j < myJson.item[i].item.length; j++) {
+                    if('request' in myJson.item[i].item[j]){
+                        cadena.push("### " +myJson.item[i].item[j].request.method+" "+myJson.item[i].item[j].name+"<br><br>");
+                        cadena.push("> " +myJson.item[i].item[j].request.url.raw+"<br><br>");
+                        cadena.push(formatear(myJson.item[i].item[j].request.description+"<br><br>"));
+                        if(myJson.item[i].item[j].request.header.length !== 0){
+                            cadena.push("#### Request Headers<br><br>");
+                            cadena.push("| campo | valor |<br>");
+                            cadena.push("-------|------<br>");
+                            for (const key in myJson.item[i].item[j].request.header) {
+                                cadena.push("| "+myJson.item[i].item[j].request.header[key].key+" | "+myJson.item[i].item[j].request.header[key].value+" |<br><br>");
+                            }
+                        }
+                        if('body' in myJson.item[i].item[j].request){
+                            cadena.push("<br><br>#### BODY<br><br>");
+                            cadena.push("```json<br>");
+                            cadena.push(formatear(myJson.item[i].item[j].request.body.raw+"<br><br>"));
+                            cadena.push("```<br><br>");
+                        }
+                    } else{
+                        cadena.push("### "+myJson.item[i].item[j].name+"<br><br>");
+                        if(myJson.item[i].item[j].description !== undefined){
+                            cadena.push(formatear(myJson.item[i].item[j].description+"<br><br>"));
+                        }
+                        if('item' in myJson.item[i].item[j]){
+                            for(let h = 0; h < myJson.item[i].item[j].item.length; h++){
+                                cadena.push("#### "+myJson.item[i].item[j].item[h].request.method + " " +myJson.item[i].item[j].item[h].name+"<br><br>");
+                                cadena.push("> " +myJson.item[i].item[j].item[h].request.url.raw+"<br><br>");
+                                cadena.push(formatear(myJson.item[i].item[j].item[h].request.description+"<br><br>"));
+                                if('header' in myJson.item[i].item[j].item[h].request){
+                                    cadena.push("<br>#### Request Headers <br>");
+                                    cadena.push("| campo | valor |<br>");
+                                    cadena.push("-------|------<br>");
+                                    for (const key in myJson.item[i].item[j].item[h].request.header) {
+                                        cadena.push("| "+myJson.item[i].item[j].item[h].request.header[key].key+" | "+myJson.item[i].item[j].item[h].request.header[key].value+" |<br>");
+                                    }
+                                    cadena.push("<br><br>");
+                                    if ('body' in myJson.item[i].item[j].item[h].request) {
+                                        cadena.push("#### BODY<br><br>");
+                                        cadena.push("```json<br><br>");
+                                        cadena.push(myJson.item[i].item[j].item[h].request.body.raw+"<br><br>");
+                                        cadena.push("```<br><br>");
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        
+        console.log("Elementos convertidos: "+cadena.length);
+        for (let i = 0; i < cadena.length; i++){
+        contenido.innerHTML += cadena[i];}
+        
+        function formatear(string){
+            let valor = string
+            .replaceAll("``` json", "<br>```json<br>")
+            .replaceAll(" ## ", "<br><br>## ")
+            .replaceAll("} ``` ","} <br><br> ```<br><br>")
+            .replaceAll("####", "<br><br>#### ")
+            .replaceAll(imgRegex, function(match) {return "<br><br>" + match + "<br><br>";})
+            .replaceAll(jsonRegex, function(match) {return "<br><br>" + match + " <br><br>";})
+            .replaceAll("``` javascript", "<br>```javascript<br>")
+            .replaceAll("### GET", "### <span style='color:green; font-weight:bold'>GET</span>")
+            .replaceAll("### POST", "### <span style='color:orange; font-weight:bold'>POST</span>")
+            .replaceAll("### PUT", "### <span style='color:blue; font-weight:bold'>PUT</span>")
+        
+            return valor;
+        }
+        
+        output = contenido.innerHTML;
+        return output;
+        
+        };   
+        
+          //trigger the fileReader
+          reader.readAsText(file);
+        }
+        
+        function generateFileDataUrl(event){
+          const inputValue = output.value;
+          const file = createFileObj(inputValue, "My Text file");
+          const reader = new FileReader();
+          
+          reader.onload = applyDataUrlToAnchor;
+        
+          reader.readAsDataURL(file);
+        }
+        
+        //create a file with dynamic content
+        function createFileObj(content, name){
+          const file = new File(
+            [content],
+            `${name}.md`,
+            { type: "text/plain" }
+          );
+          
+          return file;
+        }
+        
+        function applyDataUrlToAnchor(e){
+        //   fileDownload.href = e.target.result;
+          downloadButtonContainer.classList.remove("hidden");
+        };
+
+      </script>
+    
+</body>
+</html>

@@ -1,0 +1,1313 @@
+{
+	"info": {
+		"_postman_id": "adfsdfsdfsdfsdfs",
+		"name": "DEMO DOCS",
+		"description": "Esta documentación en Github cuenta con una Tabla de Contenidos, la cual se accede haciendo clic en el botón que esta junto al texto readme.md.\n\n![](https://via.placeholder.com/300)\n\n![](https://via.placeholder.com/300)\n\nMediante la Tabla de Contenidos podrá ir directamente a la sección de su ínterés. Las secciones Configuraciones Previas y Errores tienen aclaraciones importantes para ayudarlo a hacer pruebas en los endpoints de la API, si considera que alguna sección necesita alguna aclaración el repositorio será actualizado.",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "222"
+	},
+	"item": [
+		{
+			"name": "Configuraciones Previas",
+			"item": [],
+			"description": "Para comenzar a trabajar con la API de forma cómoda se harán algunas configuraciones en Postman.\n\n![](https://via.placeholder.com/300)\n\nEn la sección Environments(1) se agrega un nuevo entorno, en este caso APP(2) y dentro del mismo se crea la variable urlAPP que será la url endpoint3 de la api y la variable token que se creara sola luego de hacer el POST de endpoint1, en la siguiente sección.\n\nEstas variables al estar configuradas con el TYPE secret se mostraran como * en las rutas.\n\n\\[urlAPP\\] precede a las rutas: por ejemplo: •••••••/endpoint1/autorizacion\n\n\\[token\\] va en los Headers como valor de APPDesarrollo_token\n\nEste campo deberemos incluirlo siempre que el manual muestre:\n\n#### REQUEST HEADERS\n\n![](https://via.placeholder.com/300)\n\nSi hay mas **Request Headers** se colocan debajo de APPDesarrollo_token junto a sus valores.\n\n#### BODY\n\nCampos que van al **BODY** se configuran en la pestaña Body(1), se marca como raw(2) y en formato JSON(3)\n\n![](https://via.placeholder.com/300)\n\n#### REQUEST PARAMS y QUERIES\n\nValores que se identifiquen como **PARAMS** son valores que son incluidos al final de la ruta URL que llama a la API. al igual que los valores que sean identificados como **QUERIES**"
+		},
+		{
+			"name": "endpoint1",
+			"item": [
+				{
+					"name": "/endpoint1/autorizacion",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var json = JSON.parse(responseBody);\r",
+									"pm.environment.set(\"token\", json.token);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"endpoint1": {
+							"type": "noendpoint1"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"idApp\": \"f21d4175-1cf9-4673-91e6-5c66039100f7\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{urlAPP}}/endpoint1/autorizacion",
+							"host": [
+								"{{urlAPP}}"
+							],
+							"path": [
+								"endpoint1",
+								"autorizacion"
+							]
+						},
+						"description": "El campo idApp que se pide en el **BODY** viene en el state al iniciar el proyecto y se usa donde diga {{idApp}}\n\n![](https://via.placeholder.com/300)\n\n#### Respuesta:\n\n``` json\n{\n    \"token\": \"eyJhbGciOiJIUzIxzczcxczJ9.eyJpZEFwcENsaWVfsdfsdDkwNzI5OCwiZXh****w*\"\n}\n\n```\n\nComo un extra, el siguiente código en la pestaña Test de Postman recibe el token de la respuesta y lo guarda como variable para ser usada en las demas consultas a la API\n\n``` javascript\nvar json = JSON.parse(responseBody);\npm.environment.set(\"token\", json.token);\n\n```\n\n#### Error:\n\n``` json\n{\n    \"inStatus\": 409,\n    \"msg\": \"Error interno generando llave de acceso \"\n}\n\n```"
+					},
+					"response": []
+				}
+			],
+			"description": "Con el token que obtengamos aquí se pueden realizar las peticiones a la API."
+		},
+		{
+			"name": "endpoint2",
+			"item": [
+				{
+					"name": "Listado endpoint2",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "APPDesarrollo_token",
+								"value": "{{token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{urlAPP}}/endpoint2",
+							"host": [
+								"{{urlAPP}}"
+							],
+							"path": [
+								"endpoint2"
+							]
+						},
+						"description": "Con este llamado a la API recibimos la lista completa de permisos requeridos u opcionales(endpoint2s) que tenga la UltraAppe\n\n#### Ej Respuesta:\n\n``` json\n{\n    \"inStatus\": 200,\n    \"msgStatus\": \"ok\",\n    \"data\": [\n        {\n            \"estado\": \"A\",\n            \"idendpoint2\": \"0e07282gttb4e-a702-*44d**3\",\n            \"tipo\": \"perfil\",\n            \"valorInterno\": \"var2\",\n            \"descripcion\": \"var2\"\n        },\n    ]\n}\n\n```"
+					},
+					"response": []
+				},
+				{
+					"name": "Buscar por Id",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "APPDesarrollo_token",
+								"value": "{{token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{urlAPP}}/endpoint2/{{idendpoint2}}",
+							"host": [
+								"{{urlAPP}}"
+							],
+							"path": [
+								"endpoint2",
+								"{{idendpoint2}}"
+							]
+						},
+						"description": "{{idendpoint2}} es un valor que recibimos en **Listado endpoint2**. Al pasarlo al final de la url veremos solo la variable seleccionada\n\n#### Ej Respuesta:\n\n``` json\n{\n    \"inStatus\": 200,\n    \"msgStatus\": \"ok\",\n    \"data\": [\n        {\n            \"estado\": \"A\",\n            \"idendpoint2\": \"we*w**-e486-4b4e-a702-*44d**3\",\n            \"tipo\": \"perfil\",\n            \"valorInterno\": \"var2\",\n            \"descripcion\": \"var2\"\n        },\n    ]\n}\n\n```\n\n#### REQUEST PARAMS:\n\n``` json\n\"idendpoint2\" valor que val al final de la url, lo podemos obtener del llamado a Listado endpoint2\n\n```"
+					},
+					"response": []
+				},
+				{
+					"name": "Modificar endpoint2",
+					"request": {
+						"endpoint1": {
+							"type": "noendpoint1"
+						},
+						"method": "PUT",
+						"header": [
+							{
+								"key": "APPDesarrollo_token",
+								"value": "{{token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"estado\": \"A\",\r\n    \"tipo\": \"perfil\",\r\n    \"valorInterno\": \"var2\",\r\n    \"descripcion\": \"var22\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{urlAPP}}/endpoint2/{{idendpoint2}}",
+							"host": [
+								"{{urlAPP}}"
+							],
+							"path": [
+								"endpoint2",
+								"{{idendpoint2}}"
+							]
+						},
+						"description": "Con esta consulta editamos el endpoint2. Por Ej. si cambiamos \"descripcion\" cambiaremos el texto que se muestra por pantalla\n\n#### Ej Respuesta:\n\n``` json\n{\n    \"inStatus\": 200,\n    \"msgStatus\": \"ok\",\n    \"data\": [\n        {}\n    ]\n}\n\n```\n\n#### Request PARAMS:\n\n``` json\n{idendpoint2}\n\n```"
+					},
+					"response": []
+				},
+				{
+					"name": "Nuevo endpoint2",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "APPDesarrollo_token",
+								"value": "{{token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"tipo\": \"perfil\",\r\n    \"valorInterno\": \"var2\",\r\n    \"descripcion\": \"var2\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{urlAPP}}/endpoint2",
+							"host": [
+								"{{urlAPP}}"
+							],
+							"path": [
+								"endpoint2"
+							]
+						},
+						"description": "Creamos un nuevo campo requerido por UltraApp"
+					},
+					"response": []
+				}
+			],
+			"description": "Acá recibimos, creamos o editamos los permisos obligatorios u opcionales(endpoint2s) que serán requeridos en la UltraApp.\n\n![](https://via.placeholder.com/300)\n\nPor ejemplo en este caso, varA, varB, var2, varC, varD, varE, etc, ya que estamos tomando datos de un objeto."
+		},
+		{
+			"name": "endpoint3",
+			"item": [
+				{
+					"name": "Obtener endpoint3 Todos",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "APPDesarrollo_token",
+								"value": "{{token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{urlAPP}}/endpoint3/",
+							"host": [
+								"{{urlAPP}}"
+							],
+							"path": [
+								"endpoint3",
+								""
+							]
+						},
+						"description": "Con este llamado a la API obtendremos todas las endpoint3s de las Endpointes,\n\n\n"
+					},
+					"response": []
+				},
+				{
+					"name": "Obtener endpoint3",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "APPDesarrollo_token",
+								"value": "{{token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{urlAPP}}/endpoint3/{{param1}}/{{param2}}",
+							"host": [
+								"{{urlAPP}}"
+							],
+							"path": [
+								"endpoint3",
+								"{{param1}}",
+								"{{param2}}"
+							]
+						},
+						"description": "Con este llamado a la API obtendremos solo la colección de la pasemos su varA{param1} y version{param2}. Ambos valores se pueden obtener previamente desde /endpoint3/Obtener endpoint3 Todos\n\nRequest PARAMS:\n\n| **campo** | **valor** |\n| --- | --- |\n| param1 | varA de alguna Endpoint |\n| param2 | 1 por defecto |"
+					},
+					"response": []
+				},
+				{
+					"name": "Nuevo endpoint3",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "APPDesarrollo_token",
+								"value": "{{token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"param1\":\"\",\r\n    \"param2\":\"\",\r\n    \"dataKey\":\"\",\r\n    \"dataIndices\":\"\",\r\n    \"data\":\"\",\r\n    \"dataRequerid\":\"\",\r\n    \"dataAuto\":\"\",\r\n    \"estadoInicial\":\"\",\r\n    \"requiereValidacion\":\"\",\r\n    \"referencia\":\"\",\r\n    \"idReferencia\":\"\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{urlAPP}}/endpoint3/",
+							"host": [
+								"{{urlAPP}}"
+							],
+							"path": [
+								"endpoint3",
+								""
+							]
+						},
+						"description": "Con este llamado a la API crearemos la endpoint3 para una colección nueva,\n\n**\"param1\"**: \"\", //varA de la colección  \n**\"data\"**: \"\", //todos los campos que será necesario pasar dentro del campo data de cada elemento individual de esta particular colección  \n**\"param2\"**: 1, //por el momento va 1 por defecto  \n**\"dataKey\"**: \"\", //  \n**\"dataIndice\"**: \"\" //  \n**\"dataRequerid\"**: \"\", //dentro de data, los campos que son obligatorios  \n**\"dataAuto\"**: \"\" //Algunas Endpointes tendrán campos autogenerados, estos campos deben ser declarados en dataRequerid  \n**\"estadoInicial\"**: \"A\", //Activo es A, Pendiente es W  \n**\"requiereValidacion\"**: \"N\" //N para no, S para si  \n**\"referencia\"**:\"\", //  \n**\"idReferencia\"**:\"\" //"
+					},
+					"response": []
+				},
+				{
+					"name": "Modificar endpoint3",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "APPDesarrollo_token",
+								"value": "{{token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"dataKey\":\"\",\r\n    \"dataIndices\":\"\",\r\n    \"data\":\"\",\r\n    \"dataRequerid\":\"\",\r\n    \"dataAuto\":\"\",\r\n    \"estadoInicial\":\"\",\r\n    \"requiereValidacion\":\"\",\r\n    \"referencia\":\"\",\r\n    \"idReferencia\":\"\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{urlAPP}}/endpoint3/{{param1}}/{{param2}}",
+							"host": [
+								"{{urlAPP}}"
+							],
+							"path": [
+								"endpoint3",
+								"{{param1}}",
+								"{{param2}}"
+							]
+						},
+						"description": "Con este llamado podemos modificar la endpoint3 de alguna colección que hayamos creado previamente."
+					},
+					"response": []
+				}
+			],
+			"description": "En esta sección veremos los endpoints Obtener Todos, Obtener Uno, Modificar y Crear Nuevo relacionados a endpoint3s, siendo estas las endpoint3s de las distintas Endpointes."
+		},
+		{
+			"name": "endpoint4",
+			"item": [
+				{
+					"name": "Obtener endpoint4 Todos",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "APPDesarrollo_token",
+								"value": "{{token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{urlAPP}}/endpoint4/",
+							"host": [
+								"{{urlAPP}}"
+							],
+							"path": [
+								"endpoint4",
+								""
+							]
+						},
+						"description": "Con este llamado a la API obtendremos todos los endpoint4es disponibles.\n\n**\"param1\"**: \"UltraAppe\", //el varA de la colección a la que pertenece el campo param3 sobre el cual se aplicará el tipo  \n**\"param3\"**: \"param1\", //campo de data de param1  \n**\"tipoendpoint4\"**: \"C\", //A(autogenerado), C(Consulta SQL), E(Expresión regular)  \n**\"endpoint4\"**:\"\" //el algo aplicado\n\n#### Ej Respuesta:\n\n``` json\n{\n    \"inStatus\": 200,\n    \"msgStatus\": \"ok\",\n    \"data\": [\n        {\n            \"param1\": \"UltraAppe\",\n            \"param3\": \"param1\",\n            \"tipoendpoint4\": \"C\",\n            \"endpoint4\": \"select top(1) param1 from tabla where param1 = '#param1' and estado = 'A'\"\n        },\n        {\n            \"param1\": \"UltraAppe\",\n            \"param3\": \"secret\",\n            \"tipoendpoint4\": \"A\",\n            \"endpoint4\": \"#generaSecret\"\n        },\n        {\n            \"param1\": \"objeto\",\n            \"param3\": \"varE\",\n            \"tipoendpoint4\": \"E\",\n            \"endpoint4\": \"(([^<>()[\\\\]\\\\\\\\.,;:\\\\s@\\\\\\\"]+(\\\\.[^<>()[\\\\]\\\\\\\\.,;:\\\\s@\\\\\\\"]+)*)|(\\\\\\\".+\\\\\\\"))@((\\\\[[0-9]{1,3}\\\\.[0-9]{1,3}\\\\.[0-9]{1,3}\\\\.[0-9]{1,3}\\\\])|(([a-zA-Z\\\\-0-9]+\\\\.)+[a-zA-Z]{2,}))$\"\n        },\n    ]\n}\n\n```"
+					},
+					"response": []
+				},
+				{
+					"name": "Obtener endpoint4",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "APPDesarrollo_token",
+								"value": "{{token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{urlAPP}}/endpoint4/{{param1}}/{{param3}}",
+							"host": [
+								"{{urlAPP}}"
+							],
+							"path": [
+								"endpoint4",
+								"{{param1}}",
+								"{{param3}}"
+							]
+						},
+						"description": "Con este llamado a la API obtendremos un algo en particular.\n\n#### Request PARAMS:\n\nEstos parámetros pueden ser obtenidos previamente con /endpoint4/Obtener endpoint4 Todos y van al final de la url\n\n| **campo** | **valor** |\n| --- | --- |\n| param1 | varA de la colección |\n| param3 | campo dentro de data de la colección en la cual se aplica el algo |"
+					},
+					"response": []
+				},
+				{
+					"name": "Nuevo endpoint4",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "APPDesarrollo_token",
+								"value": "{{token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"param1\":\"\",\r\n    \"param3\":\"\",\r\n    \"tipoendpoint4\":\"\",\r\n    \"endpoint4\":\"\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{urlAPP}}/endpoint4/",
+							"host": [
+								"{{urlAPP}}"
+							],
+							"path": [
+								"endpoint4",
+								""
+							]
+						},
+						"description": "Con este llamado a la API crearemos un nuevo algo\n\n**BODY**\n\n| **campo** | **valor** |\n| --- | --- |\n| param1 | donde a la que pertenecerá |\n| param3 | campo dentro de data sobre la cual se aplicará el algo |\n| tipoendpoint4 | A(algo autogenerado), C(Consulta SQL), E(expresion regular RegEx) |\n| endpoint4 | cadena con el algo a aplicar |\n\nEjemplos de algo:\n\n**Autogenerado**: #valor?N (aplica un valor y si no existe deja N)  \n**Consulta SQL**: \"select top(1) param1 from algo where param1 = '#param1' and estado = 'A'\"  \n**Expresión Regular**: '^\\[0-9\\]+$' //para verificar que sean solo números"
+					},
+					"response": []
+				},
+				{
+					"name": "Modificar endpoint4",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "APPDesarrollo_token",
+								"value": "{{token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"tipoendpoint4\":\"\",\r\n    \"endpoint4\":\"\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{urlAPP}}/endpoint4/{{param1}}/{{param3}}",
+							"host": [
+								"{{urlAPP}}"
+							],
+							"path": [
+								"endpoint4",
+								"{{param1}}",
+								"{{param3}}"
+							]
+						},
+						"description": "#### Request PARAMS:\n\nEstos parámetros pueden ser obtenidos previamente con /endpoint4/Obtener endpoint4 Todos y van al final de la url\n\n| **campo** | **valor** |\n| --- | --- |\n| param1 | varA de la colección |\n| param3 | campo dentro de data de la colección en la cual se aplica el algo |"
+					},
+					"response": []
+				}
+			],
+			"description": "En esta sección se agrupan los endpoints relacionados a los endpoint4es. Estos pueden ser del tipo:\n\nA - algo autogenerado,  \nC - Consulta SQL,  \nE - Expresión regular (formato de varE, formato de fecha, etc)"
+		},
+		{
+			"name": "Endpoint",
+			"item": [
+				{
+					"name": "EndpointAA",
+					"item": [
+						{
+							"name": "Todos los EndpointAA",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Endpoint",
+										"value": "EndpointAA",
+										"type": "text"
+									},
+									{
+										"key": "valorkey",
+										"value": "descripcion",
+										"type": "text"
+									},
+									{
+										"key": "valor",
+										"value": "%",
+										"type": "text"
+									},
+									{
+										"key": "operador",
+										"value": "like",
+										"type": "text"
+									},
+									{
+										"key": "APPDesarrollo_token",
+										"value": "{{token}}",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{urlAPP}}/Endpoint/getKey",
+									"host": [
+										"{{urlAPP}}"
+									],
+									"path": [
+										"Endpoint",
+										"getKey"
+									]
+								},
+								"description": "El campo param1 luego lo usaremos en \\[EndpointAA por Id\\].\n\n#### Ej Respuesta:\n\n``` json\n{}\n\n```"
+							},
+							"response": []
+						},
+						{
+							"name": "EndpointAA Concatenado",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Endpoint",
+										"value": "EndpointAA",
+										"type": "text"
+									},
+									{
+										"key": "valorkey",
+										"value": "descripcion,codigovarD",
+										"type": "text"
+									},
+									{
+										"key": "valor",
+										"value": "d",
+										"type": "text"
+									},
+									{
+										"key": "operador",
+										"value": "like,like",
+										"type": "text"
+									},
+									{
+										"key": "APPDesarrollo_token",
+										"value": "{{token}}",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{urlAPP}}/Endpoint/getKey",
+									"host": [
+										"{{urlAPP}}"
+									],
+									"path": [
+										"Endpoint",
+										"getKey"
+									]
+								},
+								"description": "El campo param1 luego lo usaremos en \\[EndpointAA por Id\\].  \nEste llamado a la API es igual a Todos los algo solo que en los headers jugamos con la consulta que realizamos.\n\nEn este ejemplo traemos todos los algo cuyo campo \\[descripcion\\] termine en \"ddddd\" y \\[codigovarD\\] termine en l\n\n#### Ej Respuesta:\n\n``` json\n{\n    \"inStatus\": 200,\n    \"msgStatus\": \"ok\",\n    \"data\": [\n        {\n            \"param1\": \"72e52d74-3d50-4e3a-a331-f5a38382176b\",\n            \"data\": \"{\\\"creadoEl\\\":\\\"20220718155719849\\\",\\\"descripcion\\\":\\\"algo\\\",\\\"codigovarD\\\":\\\"asasas\\\"},\n    ]\n}\n\n```"
+							},
+							"response": []
+						},
+						{
+							"name": "EndpointAA por id",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "APPDesarrollo_token",
+										"value": "{{token}}",
+										"type": "text"
+									},
+									{
+										"key": "Endpoint",
+										"value": "EndpointAA",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{urlAPP}}/Endpoint/{{param1}}",
+									"host": [
+										"{{urlAPP}}"
+									],
+									"path": [
+										"Endpoint",
+										"{{param1}}"
+									]
+								},
+								"description": "Obtenemos solo el vvvv del cual pasemos el valor de param1 obtenido en la lista anterior \\[Todos los algo\\]\n\n#### Requested PARAMS\n\n``` json\nparam1\n\n```"
+							},
+							"response": []
+						}
+					],
+					"description": "Esta colección de sdfsdf por el momento solo se usa para el menú desplegable del formulario de Crear Cuenta en APP. Facilita mostrar luego solamente las sdfsdfs del sdfsdf seleccionado."
+				},
+				{
+					"name": "EndpointBB",
+					"item": [
+						{
+							"name": "Obtener EndpointBB por EndpointAA",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Endpoint",
+										"value": "EndpointBB",
+										"type": "text"
+									},
+									{
+										"key": "valorkey",
+										"value": "idUno",
+										"type": "text"
+									},
+									{
+										"key": "valor",
+										"value": "{{param1}}",
+										"type": "text"
+									},
+									{
+										"key": "operador",
+										"value": "=",
+										"type": "text"
+									},
+									{
+										"key": "APPDesarrollo_token",
+										"value": "{{token}}",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{urlAPP}}/Endpoint/getKey",
+									"host": [
+										"{{urlAPP}}"
+									],
+									"path": [
+										"Endpoint",
+										"getKey"
+									]
+								},
+								"description": "El Header \\[valor\\] se reemplaza por el param1 del EndpointAA del cual deseamos traer las cosas\n\n#### Ej Respuesta:\n\n``` json\n{\n    \"inStatus\": 200,\n    \"msgStatus\": \"ok\",\n  \"motracosa\": \"ok\",\n   }\n\n```"
+							},
+							"response": []
+						}
+					],
+					"description": "Esta colección de cosas por el momento solo se usa para el menú desplegable del formulario de Crear Cuenta en APP. Facilita mostrar luego solamentesd la EndpointBB seleccionada."
+				},
+				{
+					"name": "EndpointCC",
+					"item": [
+						{
+							"name": "Obtener EndpointCC por EndpointBB",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Endpoint",
+										"value": "valor1",
+										"type": "text"
+									},
+									{
+										"key": "valorkey",
+										"value": "idEndpointBB",
+										"type": "text"
+									},
+									{
+										"key": "valor",
+										"value": "{{param1}}",
+										"type": "text"
+									},
+									{
+										"key": "operador",
+										"value": "=",
+										"type": "text"
+									},
+									{
+										"key": "APPDesarrollo_token",
+										"value": "{{token}}",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{urlAPP}}/Endpoint/getKey",
+									"host": [
+										"{{urlAPP}}"
+									],
+									"path": [
+										"Endpoint",
+										"getKey"
+									]
+								},
+								"description": "El Header \\[valor\\] se reemplaza por el param1 de la EndpointBB de la cual deseamos traer las EndpointCC\n\n#### Ej Respuesta:\n\n``` json\n{\n    \"inStatus\": 200,\n    \"msgStatus\": \"ok\",\n    \"data\": [\n        {\n            \"param1\": \"004843c7-0353-47e0-818a-2cfd8689ba71\",\n                     \"estado\": \"A\",\n            \"creadoEl\": \"20220718164327268\"\n        },\n    ]\n}\n\n```"
+							},
+							"response": []
+						}
+					],
+					"description": "Esta colección de EndpointCC por el momento solo se usa para el menú desplegable del formulario de Crear Cuenta en APP."
+				},
+				{
+					"name": "EndpointDD",
+					"item": [
+						{
+							"name": "Crear EndpointDD",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "APPDesarrollo_token",
+										"value": "{{token}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n\"Endpoint\":\"EndpointDD\",\r\n\"param2\":\"1\",\r\n\"data\":{\r\n    \"varA\":\"ddddddd\",\r\n    \"varB\":\"ddddddddd\",\r\n    \"dddddddddd\":\"ddddddd\",\r\n    \"ddddddddd\":\"90666000\",\r\n    \"varE\":\"nuevdsdsdsds\",\r\n    \"varD\":\"dssfsdfsdfsd\",\r\n    \"ddddd\":\"dss\",\r\n    \"var2\":\"dsfsfdsf\",\r\n    \"ddddddd\":\"cfc3643d-b5dd26cb\",\r\n    \"sssssss\":\"\",\r\n    \"ssssss\":\"\",\r\n    \"varDOtro\":\"\",\r\n    \"sfsfdsdf\":[\"ffeefcbd-447d-408a-81be-806126fd147f\",\"b0ece4f0-2459-s-ddd-005d712251aa\",\"Kd\",\"ddfdd\",\"170\",\"\",\"\",\"ddddd\",\"\"],\r\n    \"imagenEndpoint\":\"\",\r\n    \"dfdsfsdfs\":\"\",\r\n    \"fdsfsdfsdf\":\"\"\r\n    }\r\n}\r\n",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{urlAPP}}/Endpoint/",
+									"host": [
+										"{{urlAPP}}"
+									],
+									"path": [
+										"Endpoint",
+										""
+									]
+								},
+								"description": "Creamos un nuevo EndpointDD con todos los campos solicitados en **BODY**.\n\n#### Ej Respuesta:\n\n``` json\n{\n    \"inStatus\": 200,\n    \"msgStatus\": \"ok\",\n  }\n\n```"
+							},
+							"response": []
+						},
+						{
+							"name": "Obtener EndpointDDs Todos",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "APPDesarrollo_token",
+										"value": "{{token}}",
+										"type": "text"
+									},
+									{
+										"key": "Endpoint",
+										"value": "EndpointDD",
+										"type": "text"
+									},
+									{
+										"key": "valor",
+										"value": "%",
+										"type": "text"
+									},
+									{
+										"key": "valorKey",
+										"value": "varA",
+										"type": "text"
+									},
+									{
+										"key": "operador",
+										"value": "like",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{urlAPP}}/Endpoint/getKey",
+									"host": [
+										"{{urlAPP}}"
+									],
+									"path": [
+										"Endpoint",
+										"getKey"
+									]
+								},
+								"description": "Con este llamado traemos todos los sfd registrados en APP\n\nLa consulta seria:\n\nTraer de  \n\\[Endpoint\\](en este caso EndpointDD) todas las filas con  \n\\[valorKey\\](en este caso varA)  \n\\[operador\\](like significa 'que sean como')  \n\\[valor\\](% es un comodín que trae todos)"
+							},
+							"response": []
+						},
+						{
+							"name": "Obtener EndpointDDs Todos Concatenado",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "APPDesarrollo_token",
+										"value": "{{token}}",
+										"type": "text"
+									},
+									{
+										"key": "Endpoint",
+										"value": "EndpointDD",
+										"type": "text"
+									},
+									{
+										"key": "valor",
+										"value": "%,%",
+										"type": "text"
+									},
+									{
+										"key": "valorKey",
+										"value": "varA,varB",
+										"type": "text"
+									},
+									{
+										"key": "operador",
+										"value": "like,like",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{urlAPP}}/Endpoint/getKey",
+									"host": [
+										"{{urlAPP}}"
+									],
+									"path": [
+										"Endpoint",
+										"getKey"
+									]
+								},
+								"description": "Con este llamado traemos todos los dstrados en APP cuyo varB sea ddd\n\nLa consulta seria:\n\nTraer de  \n\\[Endpoint\\](en este caso EndpointDD) todas las filas con  \n\\[valorKey\\](en este caso varA y varB, separado por coma pero no por espacio)  \n\\[operador\\](like significa 'que sean como', uno para cada campo, separado por coma pero no por espacio)  \n\\[valor\\](% es un comodín que trae cualquier caracter o caracteres, uno para cada campo, separado por coma pero no por espacio, pero en el caso de varB debe continuar con ddd, o terminar con ddddd)"
+							},
+							"response": []
+						},
+						{
+							"name": "Obtener EndpointDD",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Endpoint",
+										"value": "EndpointDD",
+										"type": "text"
+									},
+									{
+										"key": "APPDesarrollo_token",
+										"value": "{{token}}",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{urlAPP}}/Endpoint/{{param1}}",
+									"host": [
+										"{{urlAPP}}"
+									],
+									"path": [
+										"Endpoint",
+										"{{param1}}"
+									]
+								},
+								"description": "En este caso {param1} pertenece a algún EndpointDD de los que hayamos obtenido medianted"
+							},
+							"response": []
+						},
+						{
+							"name": "Modificar EndpointDD",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "PUT",
+								"header": [
+									{
+										"key": "APPDesarrollo_token",
+										"value": "{{token}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"}\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{urlAPP}}/Endpoint/{{param1}}",
+									"host": [
+										"{{urlAPP}}"
+									],
+									"path": [
+										"Endpoint",
+										"{{param1}}"
+									]
+								},
+								"description": "El parámetro {{param1}} pertenece a alguno de los EndpointDDs que obtuvimos de \\[Obtener EndpointDDs Todos\\].\n\nEn el **BODY** dentro de \\[data\\] podemos enviar 1 o varios campos pertenecientes a la colección junto a los valores que queremos modificar.\n\nNótese que agregar \\[dat"
+							},
+							"response": []
+						}
+					],
+					"description": "Un EndpointDD es una fsdfsd registrada en el portal APP."
+				},
+				{
+					"name": "UltraAppe",
+					"item": [
+						{
+							"name": "Obtener UltraAppe Todas",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "APPDesarrollo_token",
+										"value": "{{token}}",
+										"type": "text"
+									},
+									{
+										"key": "Endpoint",
+										"value": "UltraAppe",
+										"type": "text"
+									},
+									{
+										"key": "valor",
+										"value": "%",
+										"type": "text"
+									},
+									{
+										"key": "valorKey",
+										"value": "varA",
+										"type": "text"
+									},
+									{
+										"key": "operador",
+										"value": "like",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{urlAPP}}/Endpoint/getKey",
+									"host": [
+										"{{urlAPP}}"
+									],
+									"path": [
+										"Endpoint",
+										"getKey"
+									]
+								},
+								"description": "Con este llamado traemos todos las UltraAppes registradas en APP.\n\nLa consulta seria:\n\nTraer de  \n\\[Endpoint\\](en este caso UltraAppe) todas las filas con  \n\\[valorKey\\](en este caso varA)  \n\\[operador\\](like significa 'que sean como')  \n\\[valor\\](% es un comodín que significa todos)"
+							},
+							"response": []
+						},
+						{
+							"name": "Obtener UltraAppe",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Endpoint",
+										"value": "UltraAppe",
+										"type": "text"
+									},
+									{
+										"key": "APPDesarrollo_token",
+										"value": "{{token}}",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{urlAPP}}/Endpoint/{{idAppe}}",
+									"host": [
+										"{{urlAPP}}"
+									],
+									"path": [
+										"Endpoint",
+										"{{idAppe}}"
+									]
+								},
+								"description": "En este caso {param1} pertenece a alguna UltraAppe de las que hayamos obtenido mediante \\[Obtener UltraAppe Todos\\].\n\nAl hacer pruebas en Postman nótese que adentro de \\[data\\] viene otro campo \\[data\\], el cual trae un string con toda la información de la UltraA"
+							},
+							"response": []
+						},
+						{
+							"name": "Crear UltraAppe",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "APPDesarrollo_token",
+										"value": "{{token}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"Endpoint\": \"UltraAppe\",\r\n    \"param2\": \"1\",\r\n    \"data\": { \"Endpoint\": \"UltraAppe\",\r\n\"Endpoint\": \"UltraAppe\",\r\n}\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{urlAPP}}/Endpoint/",
+									"host": [
+										"{{urlAPP}}"
+									],
+									"path": [
+										"Endpoint",
+										""
+									]
+								},
+								"description": "Con este llamado a la API creamos una nueva UltraAppe.\n\n{Endpoint}: en este caso es UltraAppe  \n{param2}:siempre es 1  \n{data}:en este caso notaremos que los datos son distintos a EndpointDD. Aqui los campos son  \n{\n\n\"creadoEl\": \"20220727184216989\", //autogenerado  \n\"varA\": \"Super App!\", //el varA de la app a crear  \n\"logo\": \"url_de_la_imagen.png\",   \n\"redirectUrl\": \"\", //ruta de redireccionamiento de la app  \n\"endpoint2Requeridos\": \\[\"idendpoint21\", \"idendpoint22\", \"idendpoint23\", \"idendpoint24\"\\], //campos requeridos por la app  \n\"endpoint2Opcionales\": \\[ \"idendpoint2A\", \"idendpoint2B\", \"idendpoint2C\"\\], //campos opcionales de la app  \n\"origen\": \\[\"url_de_la_app\"[\\]](http://localhost:8095/), //url de origen  \n\"param1\": \"**\",** //id del algo  \n\"secret\": \"$2a$10$htFjv2.3*******\" \n\n}"
+							},
+							"response": []
+						},
+						{
+							"name": "Modificar UltraAppe",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "PUT",
+								"header": [
+									{
+										"key": "APPDesarrollo_token",
+										"value": "{{token}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"Endpoint\": \"UltraAppe\",\r\n    \"param2\": \"1\",\r\n    \"data\": {\r\n       \"Endpoint\": \"UltraAppe\",\r\n    \"param2\": \"1\",\r\n }\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{urlAPP}}/Endpoint/{{param1}}",
+									"host": [
+										"{{urlAPP}}"
+									],
+									"path": [
+										"Endpoint",
+										"{{param1}}"
+									]
+								},
+								"description": "Con este llamado a la API podremos editar la información de UltraAppe.  \n{{param1}} lo obtenemos de Obtener UltraAppe Todas.\n\nDentro "
+							},
+							"response": []
+						},
+						{
+							"name": "Obtener Valida-Data Todos",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "APPDesarrollo_token",
+										"value": "{{token}}",
+										"type": "text"
+									},
+									{
+										"key": "Endpoint",
+										"value": "UltraAppe",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{urlAPP}}/Endpoint/getValidaDataAll/{{param1}}",
+									"host": [
+										"{{urlAPP}}"
+									],
+									"path": [
+										"Endpoint",
+										"getValidaDataAll",
+										"{{param1}}"
+									]
+								},
+								"description": "Este llamado a la API nos trae todas las solicitudes de permisos que ha hecho la UltraAppe. Los estados pueden ser W(pendiente), o A(aprobado)\n\n#### Request PARAMS:\n\n{{param1}} pertenece a alguna UltraAppe obtenida mediante Obtener UltraAppe Todas\n\n#### Ej Respuesta:\n\n``` json\n{\n    \"inStatus\": 200,\n    \"msgStatus\": \"ok\",\n    \"data\": [\n        {\n            \"param1\": \"1fe2acfc-dgggg862-4*\",\n            \"data\": \"{\\\"origen\\\":[\\\"http://localhost:8090/\\\"],\\\"creadoEl\\\":\\\"20220819161352821\\\"}\",\n            \"estado\": \"W\",\n            \"creadoEl\": \"20220819161352821\",\n            \"idValidacion\": \"8b1445gggggda215074a\"\n        }\n    ]\n}\n\n```"
+							},
+							"response": []
+						},
+						{
+							"name": "Obtener Valida-Data por Id",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "APPDesarrollo_token",
+										"value": "{{token}}",
+										"type": "text"
+									},
+									{
+										"key": "Endpoint",
+										"value": "UltraAppe",
+										"type": "text"
+									},
+									{
+										"key": "param1",
+										"value": "{{param1}}",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{urlAPP}}/Endpoint/getcxzc/{{idzxcon}}",
+									"host": [
+										"{{urlAPP}}"
+									],
+									"path": [
+										"Endpoint",
+										"getzxcd",
+										"{{idValidacion}}"
+									]
+								},
+								"description": "Con este llamado a lcxzczxczxczx"
+							},
+							"response": []
+						},
+						{
+							"name": "Obtiene Valida-Data Pendientes",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "APPDesarrollo_token",
+										"value": "{{token}}",
+										"type": "text"
+									},
+									{
+										"key": "Endpoint",
+										"value": "UltraAppe",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{urlAPP}}/Endpoint/getValidaDataPendientes",
+									"host": [
+										"{{urlAPP}}"
+									],
+									"path": [
+										"Endpoint",
+										"getValidaDataPendientes"
+									]
+								},
+								"description": "Con este llamado a la API obtendremos todas las UltraAppes que tengan solicitudes de permisos pendientes.\n\n#### Ej Respuesta:\n\nsdfsfdsdfsdfsdfsdfsd\nsfsdfsfdsdfsdfsdfsdfdsf"
+							},
+							"response": []
+						},
+						{
+							"name": "Modificar Estado",
+							"request": {
+								"method": "PUT",
+								"header": [
+									{
+										"key": "APPDesarrollo_token",
+										"value": "{{token}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"Endpoint\": \"UltraAppe\",\r\n    \"param1\":\"1fe2acsdfcd9d\",\r\n    \"estado\":\"A\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{urlAPP}}/Endpoint/estado",
+									"host": [
+										"{{urlAPP}}"
+									],
+									"path": [
+										"Endpoint",
+										"estado"
+									]
+								},
+								"description": "Con este llamado a la API podemos modificar el estado de una UltraAppe. Por ejemplo: de W(pendiente) a A(aprobado).\n\n#### Ej Respuesta:\n\ndgsdffffffffffffffffffffffffffff\nsdffsdfsdfsfsf"
+							},
+							"response": []
+						},
+						{
+							"name": "Valida Data Id",
+							"request": {
+								"method": "PUT",
+								"header": [
+									{
+										"key": "APPDesarrollo_token",
+										"value": "{{token}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"Endpoint\":\"UltraAppe\",\r\n    \"param1\":\"{{param1}}\",\r\n    \"estado\":\"A\",\r\n    \"resultado\":\"Razon por la que se aprueba o niega el permiso\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{urlAPP}}/Endpoint/ValidaDataId/{ idValidacion }",
+									"host": [
+										"{{urlAPP}}"
+									],
+									"path": [
+										"Endpoint",
+										"ValidaDataId",
+										"{ idValidacion }"
+									]
+								},
+								"description": "Con este llamado a la API modificamos el estado de un permiso solicitado.  \nEn el BODY \\[resultado\\] va alguna observación sobre la decisión de aprobar o denegar el permiso solicitado.\n\n#### Request PARAMS:\n\n{ idValidacion } lo podemos obtener de \\[Obtener Valida-Data Todos\\]\n\n``` json\n{ idValidacion }\n\n```\n\n#### Ej Respuesta:\n\n``` json\n{\n    \"inStatus\": 200,\n    \"msgStatus\": \"data validada actualizada\",\n    \"data\": [\n        {}\n    ]\n}\n\n```"
+							},
+							"response": []
+						}
+					],
+					"description": "Una UltraAppe sdfsdgsdfghdsf  sdfsd fsdfsdfsdfsdsd sdfsdfsdfsdfsdfsfsdfP."
+				}
+			],
+			"description": "Si bien estas consultas son comunes a todas las Endpointes (EndpointAA, EndpointBB, EndpointCC, EndpointDD, UltraAppe), se genera una carpeta para cada colección para una implementación mas rápida de Obtener Todos, Obtener Uno, Modificar, Crear.\n\nCada nueva colección cambiara el valor del Header \\[Endpoint\\].\n\nLa estructura del body request o el body response cambiara solo dentro del campo data, ya que la estructura de datos de cada colección es distinta."
+		},
+		{
+			"name": "Endpoint Login",
+			"item": [
+				{
+					"name": "Modificar Login",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "APPDesarrollo_token",
+								"value": "{{token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"Endpoint\":\"\",\r\n    \"valorId\":\"\",\r\n    \"password\":\"\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{urlAPP}}/EndpointLogin/",
+							"host": [
+								"{{urlAPP}}"
+							],
+							"path": [
+								"EndpointLogin",
+								""
+							]
+						},
+						"description": "Con este llamado a la API se realiza el Login.\n\n{Endpoint}: por ej: EndpointDD, asdsadad, etc  \n{valorId}: idEndpointDD, param1, etc  \n{password}: el password registrado perteneciente a {valorId}"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Correo",
+			"item": [
+				{
+					"name": "Crear Correo",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "APPDesarrollo_token",
+								"value": "{{token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"para\":\"correo@gmail.com\",\r\n    \"asunto\":\"prueba pm\",\r\n    \"cuerpo\":\"\",\r\n    \"cuerpohtml\":\"div <p>parrafo</p> <br><strong>ver</strong>\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{urlAPP}}/correo/",
+							"host": [
+								"{{urlAPP}}"
+							],
+							"path": [
+								"correo",
+								""
+							]
+						},
+						"description": "Con este llamado a la API se pueden enviar correos electrónicos.\n\n{para}: varE del destinatario  \n{asunto}: resumen del contenido que muestra el mail en la bandeja de recibidos.  \n{cuerpo}: Cuerpo del mensaje en texto plano  \n{cuerpohtml}: Cuerpo del mensaje con html y css embebido. Cada estilo debe ser aplicado en cada etiqueta html, ya que se comienza dentro de una etiqueta DIV en lugar de una etiqueta BODY dentro de una etiqueta HTML\n\nPor ej:\n\nbutton style=\"font: inherit; background-color: #359ff4; border: none; padding: 20px; margin-top: 40px; letter-spacing: 2px; font-weight: 600; color: white; font-size: 20px; border-radius: 5px; box-shadow: 3px 3px #266da7;\""
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Errores",
+			"item": [],
+			"description": "#### 01 - Barras Invertidas en las cadenas de texto\n\nEn ocasiones las respuestas son formateadas por Postman para escapar algunos caracteres especiales. Como vimos en"
+			
+		}
+	]
+}
